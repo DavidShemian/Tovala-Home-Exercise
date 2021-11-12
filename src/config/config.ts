@@ -13,7 +13,11 @@ enum Environment {
 interface IRequiredConfigs {
     PORT: number;
     JWT_SECRET: string;
-    DB_LOCATION: string;
+    POSTGRES_HOST: string;
+    POSTGRES_PORT: number;
+    POSTGRES_USER: string;
+    POSTGRES_PASSWORD: string;
+    POSTGRES_DB_NAME: string;
 }
 
 type RequiredConfigsKeys = keyof IRequiredConfigs;
@@ -25,15 +29,27 @@ type RequiredConfigsKeys = keyof IRequiredConfigs;
 @Injectable()
 export class Config implements IRequiredConfigs {
     @IsString()
-    public DB_LOCATION!: string;
-
-    @IsString()
     public JWT_SECRET!: string;
 
     public NODE_ENV!: Environment;
 
     @IsNumber()
     public PORT!: number;
+
+    @IsString()
+    public POSTGRES_DB_NAME!: string;
+
+    @IsString()
+    public POSTGRES_HOST!: string;
+
+    @IsString()
+    public POSTGRES_PASSWORD!: string;
+
+    @IsNumber()
+    public POSTGRES_PORT!: number;
+
+    @IsString()
+    public POSTGRES_USER!: string;
 
     private readonly logger = new Logger(Config.name);
 
@@ -49,9 +65,13 @@ export class Config implements IRequiredConfigs {
 
         const configs = this.getParsedConfigs();
 
-        this.DB_LOCATION = configs.DB_LOCATION;
         this.JWT_SECRET = configs.JWT_SECRET;
         this.PORT = configs.PORT;
+        this.POSTGRES_HOST = configs.POSTGRES_HOST;
+        this.POSTGRES_PASSWORD = configs.POSTGRES_PASSWORD;
+        this.POSTGRES_PORT = configs.POSTGRES_PORT;
+        this.POSTGRES_USER = configs.POSTGRES_USER;
+        this.POSTGRES_DB_NAME = configs.POSTGRES_DB_NAME;
 
         validate(this).then((errors) => {
             if (errors.length > 0) {

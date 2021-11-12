@@ -1,7 +1,7 @@
-import { BcryptService } from '../bcrypt/bcrypt.service';
+import { BcryptService } from '../../auth/bcrypt/bcrypt.service';
 import { UserDAL } from './user.dal';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { BaseService } from '../bases/service.base';
+import { BaseService } from '../../bases/service.base';
 import { UserEntity } from './user.entity';
 
 @Injectable()

@@ -1,25 +1,13 @@
-import { UserModule } from '../user/user.module';
+import { UserModule } from '../models/user/user.module';
+import { TokenModule } from './token/token.module';
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { Config } from '../config/config';
 import { ConfigModule } from '../config/config.module';
 import { AuthService } from './auth.service';
-import { BcryptModule } from '../bcrypt/bcrypt.module';
+import { BcryptModule } from './bcrypt/bcrypt.module';
 import { AuthController } from './auth.controller';
 
 @Module({
-    imports: [
-        ConfigModule,
-        UserModule,
-        BcryptModule,
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (config: Config) => ({
-                secret: config.JWT_SECRET,
-            }),
-            inject: [Config],
-        }),
-    ],
+    imports: [ConfigModule, UserModule, BcryptModule, TokenModule],
     controllers: [AuthController],
     providers: [AuthService],
 })

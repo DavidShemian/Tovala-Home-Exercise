@@ -1,45 +1,26 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { Connection } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { Config } from '../src/config/config';
+import { TokenService } from './../src/auth/token/token.service';
+import { moduleFixture, connection, postRequest } from './setup-e2e';
+import { UserEntity } from './../src/models/user/user.entity';
 
 describe('Auth (e2e)', () => {
-    let app: INestApplication;
-    let connection: Connection;
-    let jwtService: JwtService;
-    let config: Config;
+    const TEST_ROUTE = '/auth';
+
+    let tokenService: TokenService;
 
     beforeAll(async () => {
-        const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
-
-        app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe());
-
-        connection = moduleFixture.get<Connection>(Connection);
-        jwtService = moduleFixture.get<JwtService>(JwtService);
-        config = moduleFixture.get<Config>(Config);
-
-        await app.init();
+        tokenService = moduleFixture.get<TokenService>(TokenService);
     });
 
-    // // Clear DB after each test
+    // Clear DB after each test
     afterEach(async () => {
         await connection.synchronize(true);
-    });
-
-    afterAll(async () => {
-        await app.close();
     });
 
     it('Should register new user, and use lower email', async () => {
         const credentials = { email: 'ABC@gmail.com', password: 'password' };
 
-        const registerResult = await request(app.getHttpServer()).post('/auth/register').send(credentials).expect(201);
+        const registerResult = await postRequest(`${TEST_ROUTE}/register`, credentials);
+        expect(registerResult.status).toBe(201);
 
         const { message: registerMessage, data: registerData } = registerResult.body;
 
@@ -47,17 +28,33 @@ describe('Auth (e2e)', () => {
         expect(typeof registerData).toBe('string');
 
         const userFromDb = await connection.query(`SELECT * FROM users WHERE email=$1`, [credentials.email.toLowerCase()]);
-        const jwtResult = await jwtService.verifyAsync(registerData, { secret: config.JWT_SECRET });
+        const jwtResult = tokenService.verify(registerData) as UserEntity;
 
         expect(userFromDb[0].id).toBe(jwtResult.id);
+    });
+
+    it('Should fail registering with an already existing email', async () => {
+        const credentials = { email: 'ABC@gmail.com', password: 'password' };
+
+        const registerResult = await postRequest(`${TEST_ROUTE}/register`, credentials);
+        expect(registerResult.status).toBe(201);
+
+        const failedRegisterResult = await postRequest(`${TEST_ROUTE}/register`, credentials);
+        expect(failedRegisterResult.status).toBe(400);
+        expect(failedRegisterResult.body).toEqual({
+            email: 'ABC@gmail.com',
+            message: 'Email already taken. Please use a different email address',
+        });
     });
 
     it('Should login user', async () => {
         const credentials = { email: 'ABC@gmail.com', password: 'password' };
 
-        await request(app.getHttpServer()).post('/auth/register').send(credentials).expect(201);
+        const registerResult = await postRequest(`${TEST_ROUTE}/register`, credentials);
+        expect(registerResult.status).toBe(201);
 
-        const loginResult = await request(app.getHttpServer()).post('/auth/login').send(credentials).expect(201);
+        const loginResult = await postRequest(`${TEST_ROUTE}/login`, credentials);
+        expect(loginResult.status).toBe(201);
 
         const { message: loginMessage, data: loginData } = loginResult.body;
 
@@ -66,38 +63,32 @@ describe('Auth (e2e)', () => {
 
         const userFromDb = await connection.query(`SELECT * FROM users WHERE email=$1`, [credentials.email.toLowerCase()]);
 
-        const jwtResult = await jwtService.verifyAsync(loginData, { secret: config.JWT_SECRET });
+        const jwtResult = tokenService.verify(loginData) as UserEntity;
 
         expect(userFromDb[0].id).toBe(jwtResult.id);
     });
 
-    it('Should fail login user that does not exist', () => {
+    it('Should fail login user that does not exist', async () => {
         const credentials = { email: 'abc@gmail.com', password: 'password' };
 
-        return request(app.getHttpServer())
-            .post('/auth/login')
-            .send(credentials)
-            .expect(400)
-            .expect({ ...credentials, message: 'Invalid email or password, try again' });
+        const loginResult = await postRequest(`${TEST_ROUTE}/login`, credentials);
+        expect(loginResult.status).toBe(400);
+        expect(loginResult.body).toEqual({ ...credentials, message: 'Invalid email or password, try again' });
     });
 
-    it('Should fail login user when not passing email and password', () => {
+    it('Should fail login user when not passing email and password', async () => {
         const credentials = { notEmail: 'abc@gmail.com', notPassword: 'password' };
 
-        return request(app.getHttpServer())
-            .post('/auth/login')
-            .send(credentials)
-            .expect(400)
-            .expect({ statusCode: 400, message: ['email must be a string', 'password must be a string'], error: 'Bad Request' });
+        const loginResult = await postRequest(`${TEST_ROUTE}/login`, credentials);
+        expect(loginResult.status).toBe(400);
+        expect(loginResult.body).toEqual({ statusCode: 400, message: ['email must be a string', 'password must be a string'], error: 'Bad Request' });
     });
 
-    it('Should fail register user when email is not valid', () => {
+    it('Should fail register user when email is not valid', async () => {
         const credentials = { email: 'invalid email', password: 'password' };
 
-        return request(app.getHttpServer())
-            .post('/auth/register')
-            .send(credentials)
-            .expect(400)
-            .expect({ message: 'Invalid email address provided', email: 'invalid email' });
+        const loginResult = await postRequest(`${TEST_ROUTE}/register`, credentials);
+        expect(loginResult.status).toBe(400);
+        expect(loginResult.body).toEqual({ message: 'Invalid email address provided', email: 'invalid email' });
     });
 });

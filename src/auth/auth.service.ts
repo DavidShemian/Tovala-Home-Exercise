@@ -1,17 +1,18 @@
-import { UserService } from '../user/user.service';
+import { TokenService } from './token/token.service';
+import { UserService } from '../models/user/user.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { BaseService } from '../bases/service.base';
 import { Config } from '../config/config';
-import { BcryptService } from '../bcrypt/bcrypt.service';
+import { BcryptService } from './bcrypt/bcrypt.service';
+import { ITokenPayload } from '../interfaces/token-payload.interface';
 
 @Injectable()
 export class AuthService extends BaseService {
     constructor(
         private readonly config: Config,
-        private readonly jwtService: JwtService,
         private readonly userService: UserService,
-        private readonly bcryptService: BcryptService
+        private readonly bcryptService: BcryptService,
+        private readonly tokenService: TokenService
     ) {
         super();
     }
@@ -31,18 +32,22 @@ export class AuthService extends BaseService {
             throw new BadRequestException({ message: badLoginMessage, email, password });
         }
 
-        return this.jwtService.signAsync({ id: existingUser.id }, { secret: this.config.JWT_SECRET });
+        return this.signToken({ id: existingUser.id, rule: existingUser.rule });
     }
 
     public async register(email: string, password: string): Promise<string> {
         const existingUser = await this.userService.getUserByEmail(email);
 
         if (existingUser) {
-            throw new BadRequestException({ email }, 'Email already taken. Please use a different email address');
+            throw new BadRequestException({ email, message: 'Email already taken. Please use a different email address' });
         }
 
-        const { id } = await this.userService.createUser(email, password);
+        const { id, rule } = await this.userService.createUser(email, password);
 
-        return this.jwtService.signAsync({ id }, { secret: this.config.JWT_SECRET, expiresIn: '1h' });
+        return this.signToken({ id, rule });
+    }
+
+    private signToken(payload: ITokenPayload): string {
+        return this.tokenService.sign(payload);
     }
 }

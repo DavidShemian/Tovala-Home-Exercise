@@ -1,4 +1,4 @@
 {
     "JWT_SECRET": "secret",
-    "DB_LOCATION": ":memory:"
+    "POSTGRES_DB_NAME": "test"
 }

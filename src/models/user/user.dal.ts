@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BaseDAL } from '../bases/dal.base';
+import { BaseDAL } from '../../bases/dal.base';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 

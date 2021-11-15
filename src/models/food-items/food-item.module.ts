@@ -11,5 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     imports: [ConfigModule, TypeOrmModule.forFeature([FoodItemEntity, FoodItemTypeEntity])],
     controllers: [FoodItemController],
     providers: [FoodItemService, FoodItemDAL],
+    exports: [FoodItemService],
 })
 export class FoodItemModule {}

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { FoodItemEntity } from './entities/food-item.entity';
 import { BaseDAL } from '../../bases/dal.base';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { throwInternalDBException } from '../../database/db.exception';
 
 @Injectable()
@@ -29,6 +29,26 @@ export class FoodItemDAL extends BaseDAL {
         try {
             // await only for try and catch
             return await this.foodItemTypeRepository.save(foodItemsTypes);
+        } catch (e) {
+            throw throwInternalDBException(e as INativeDBException);
+        }
+    }
+
+    public async getAllFodItems(): Promise<FoodItemEntity[]> {
+        try {
+            // await only for try and catch
+            return await this.foodItemRepository.find({ where: { inStock: true }, relations: ['foodItemTypeEntity'] });
+        } catch (e) {
+            throw throwInternalDBException(e as INativeDBException);
+        }
+    }
+
+    public async getFoodItemsByIds(ids: string[]): Promise<FoodItemEntity[]> {
+        try {
+            // await only for try and catch
+            return await this.foodItemRepository.find({
+                where: { id: In(ids), inStock: true },
+            });
         } catch (e) {
             throw throwInternalDBException(e as INativeDBException);
         }

@@ -10,4 +10,5 @@ export enum InternalExceptionCodes {
     NOT_NULL_VIOLATION = 1111,
     UNEXPECTED_DB_ERROR = 9999,
     INVALID_INPUT = 9999,
+    BAD_PARAMS = 5544,
 }

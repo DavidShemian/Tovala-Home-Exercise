@@ -1,27 +1,33 @@
+import { FoodItemEntity } from './../food-items/entities/food-item.entity';
+
+import { UserEntity } from '../user/user.entity';
 import { OrderStatus } from './order-status.enum';
-import { Column, Entity } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { Column, Entity, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { BaseEntity } from '../../bases/entity.base';
 
 @Entity('orders')
 export class OrderEntity extends BaseEntity {
-    @Column({ type: 'varchar', unique: true, nullable: false })
-    @ApiProperty()
-    public email!: string;
+    @ManyToMany(() => FoodItemEntity)
+    @JoinTable()
+    public foodItems!: FoodItemEntity[];
 
-    @ApiProperty()
-    @IsNumber()
-    @Column({ type: 'varchar', unique: false, nullable: false })
-    public password!: string;
+    @Column({ type: 'float', unique: false, nullable: false })
+    public price!: number;
 
     @Column({ type: 'enum', enum: OrderStatus, unique: false, nullable: false, default: OrderStatus.PREPARING })
     public status!: OrderStatus;
 
-    constructor(email: string, password: string) {
+    @ManyToOne(() => UserEntity, (user) => user.order, { nullable: false })
+    public user!: UserEntity;
+
+    public userId!: string;
+
+    constructor(foodItems: FoodItemEntity[], price: number, user: UserEntity, status = OrderStatus.PREPARING) {
         super();
 
-        this.email = email;
-        this.password = password;
+        this.foodItems = foodItems;
+        this.price = price;
+        this.status = status;
+        this.user = user;
     }
 }

@@ -10,7 +10,7 @@ export class TokenService extends BaseService {
     }
 
     public sign(payload: object): string {
-        return sign(payload, this.config.JWT_SECRET, { expiresIn: '1h' });
+        return sign(payload, this.config.JWT_SECRET, { expiresIn: this.config.JWT_EXPIRE_IN });
     }
 
     public verify(token: string): string | JwtPayload {

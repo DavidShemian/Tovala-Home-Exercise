@@ -1,3 +1,5 @@
+import { INativeDBException } from './../../database/db.exception';
+import { throwInternalDBException } from '../../database/db.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseDAL } from '../../bases/dal.base';
@@ -11,11 +13,18 @@ export class UserDAL extends BaseDAL {
     }
 
     public async getUserByEmail(email: string): Promise<UserEntity | undefined> {
-        return this.userRepository.findOne({ email: email.toLowerCase() });
+        try {
+            return await this.userRepository.findOne({ email: email.toLowerCase() });
+        } catch (error) {
+            throw throwInternalDBException(error as INativeDBException);
+        }
     }
 
-    // TODO: duplicate email error
     public async saveUser(user: UserEntity): Promise<UserEntity> {
-        return this.userRepository.save(user);
+        try {
+            return await this.userRepository.save(user);
+        } catch (error) {
+            throw throwInternalDBException(error as INativeDBException);
+        }
     }
 }

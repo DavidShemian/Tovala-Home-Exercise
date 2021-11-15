@@ -4,6 +4,10 @@ import { IsString } from 'class-validator';
 export class RegisterDTO {
     @ApiProperty()
     @IsString()
+    public address!: string;
+
+    @ApiProperty()
+    @IsString()
     public email!: string;
 
     @ApiProperty()

@@ -8,6 +8,7 @@ let app: INestApplication;
 let moduleFixture: TestingModule;
 let connection: Connection;
 let adminToken = '';
+let customerToken = '';
 
 jest.setTimeout(50000);
 
@@ -34,6 +35,7 @@ global.beforeAll(async () => {
 // Clear DB after each test
 global.afterEach(async () => {
     adminToken = '';
+    customerToken = '';
     await connection.synchronize(true);
 });
 
@@ -44,7 +46,7 @@ global.afterAll(async () => {
 const getAdminToken = async (): Promise<string> => {
     if (adminToken) return adminToken;
 
-    const credentials = { email: 'admin@admin.com', password: 'admin' };
+    const credentials = { address: '1021 W Adams St #100, Chicago, IL 60607', email: 'admin@admin.com', password: 'admin' };
 
     await request(app.getHttpServer()).post('/auth/register').send(credentials).expect(201);
     await connection.query(`update users set "rule" = 'admin' where email = $1`, [credentials.email]);
@@ -55,25 +57,68 @@ const getAdminToken = async (): Promise<string> => {
     return adminToken;
 };
 
+const getCustomerToken = async (): Promise<string> => {
+    if (customerToken) return customerToken;
+
+    const credentials = { address: '1021 W Adams St #100, Chicago, IL 60607', email: 'customer@customer.com', password: 'customer' };
+
+    await request(app.getHttpServer()).post('/auth/register').send(credentials).expect(201);
+
+    const loginResult = await request(app.getHttpServer()).post('/auth/login').send(credentials).expect(201);
+    customerToken = loginResult.body.data;
+
+    return customerToken;
+};
+
 const adminPostRequest = async (route: string, body: string | object | undefined): Promise<Request> => {
-    return request(app.getHttpServer())
-        .post(route)
-        .set('Authorization', `Bearer ${await getAdminToken()}`)
-        .send(body);
+    return postRequest(route, body, await getAdminToken());
+};
+
+const adminPutRequest = async (route: string, body: string | object | undefined): Promise<Request> => {
+    return putRequest(route, body, await getAdminToken());
 };
 
 const adminGetRequest = async (route: string): Promise<Request> => {
-    return request(app.getHttpServer())
-        .get(route)
-        .set('Authorization', `Bearer ${await getAdminToken()}`);
+    return getRequest(route, await getAdminToken());
 };
 
-const postRequest = async (route: string, body: string | object | undefined): Promise<Request> => {
+const customerPostRequest = async (route: string, body: string | object | undefined): Promise<Request> => {
+    return postRequest(route, body, await getCustomerToken());
+};
+
+const customerGetRequest = async (route: string): Promise<Request> => {
+    return getRequest(route, await getCustomerToken());
+};
+
+const postRequest = async (route: string, body: string | object | undefined, token: string): Promise<Request> => {
+    return request(app.getHttpServer()).post(route).set('Authorization', `Bearer ${token}`).send(body);
+};
+
+const putRequest = async (route: string, body: string | object | undefined, token: string): Promise<Request> => {
+    return request(app.getHttpServer()).put(route).set('Authorization', `Bearer ${token}`).send(body);
+};
+
+const getRequest = async (route: string, token: string): Promise<Request> => {
+    return request(app.getHttpServer()).get(route).set('Authorization', `Bearer ${token}`);
+};
+
+const postRequestWithoutToken = async (route: string, body: string | object | undefined): Promise<Request> => {
     return request(app.getHttpServer()).post(route).send(body);
 };
 
-const getRequest = async (route: string): Promise<Request> => {
+const getRequestWithoutToken = async (route: string): Promise<Request> => {
     return request(app.getHttpServer()).get(route);
 };
 
-export { app, moduleFixture, connection, adminPostRequest, adminGetRequest, postRequest, getRequest };
+export {
+    app,
+    moduleFixture,
+    connection,
+    adminPostRequest,
+    adminPutRequest,
+    adminGetRequest,
+    customerPostRequest,
+    customerGetRequest,
+    postRequestWithoutToken,
+    getRequestWithoutToken,
+};

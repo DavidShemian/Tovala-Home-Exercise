@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { ITokenPayload } from './token-payload.interface';
 
-export interface IRequestWithOptionalUser extends Request {
-    user?: ITokenPayload;
+export interface IRequestWithUser extends Request {
+    user: ITokenPayload;
 }

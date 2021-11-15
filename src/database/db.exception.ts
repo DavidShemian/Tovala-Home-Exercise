@@ -1,4 +1,6 @@
-import { BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
+import { CustomInternalServerErrorException } from './../exceptions/internal-server.exception';
+import { Logger } from '@nestjs/common';
+import { CustomBadRequestException } from '../exceptions/bad-request.exception';
 import { InternalExceptionCodes } from '../exceptions/internal-exception-codes.enum';
 
 // Postgres native exception interface
@@ -33,21 +35,21 @@ export const throwInternalDBException = (nativeError: INativeDBException): void 
         const message = 'Unique violation';
         logger.error(message, nativeError);
 
-        throw new BadRequestException({ message, detail, internalCode: InternalExceptionCodes.UNIQUE_VIOLATION });
+        throw new CustomBadRequestException(InternalExceptionCodes.UNIQUE_VIOLATION, { message, detail });
     }
 
     if (code === DBExceptionCodes.FOREIGN_KEY_VIOLATION) {
         const message = 'Foreign key violation';
         logger.error(message, nativeError);
 
-        throw new BadRequestException({ message, detail, internalCode: InternalExceptionCodes.FOREIGN_KEY_VIOLATION });
+        throw new CustomBadRequestException(InternalExceptionCodes.FOREIGN_KEY_VIOLATION, { message, detail });
     }
 
     if (code === DBExceptionCodes.NOT_NULL_VIOLATION) {
         const message = 'Not null violation';
         logger.error(message, nativeError);
 
-        throw new BadRequestException({ message, detail, internalCode: InternalExceptionCodes.NOT_NULL_VIOLATION });
+        throw new CustomBadRequestException(InternalExceptionCodes.NOT_NULL_VIOLATION, { message, detail });
     }
 
     if (code === DBExceptionCodes.INVALID_INPUT) {
@@ -55,11 +57,11 @@ export const throwInternalDBException = (nativeError: INativeDBException): void 
         logger.error(errorMessage, nativeError);
 
         // Postgres error object includes message and not detail for this king of error
-        throw new BadRequestException({ errorMessage, detail: nativeError.message, internalCode: InternalExceptionCodes.INVALID_INPUT });
+        throw new CustomBadRequestException(InternalExceptionCodes.INVALID_INPUT, { errorMessage, detail: nativeError.message });
     }
 
     const message = 'Unexpected DB Error';
     logger.error(message, nativeError);
 
-    throw new InternalServerErrorException({ message, internalCode: InternalExceptionCodes.UNEXPECTED_DB_ERROR });
+    throw new CustomInternalServerErrorException(InternalExceptionCodes.UNEXPECTED_DB_ERROR, { message });
 };

@@ -13,6 +13,7 @@ enum Environment {
 interface IRequiredConfigs {
     PORT: number;
     JWT_SECRET: string;
+    JWT_EXPIRE_IN: string;
     POSTGRES_HOST: string;
     POSTGRES_PORT: number;
     POSTGRES_USER: string;
@@ -28,6 +29,9 @@ type RequiredConfigsKeys = keyof IRequiredConfigs;
  */
 @Injectable()
 export class Config implements IRequiredConfigs {
+    @IsString()
+    public JWT_EXPIRE_IN!: string;
+
     @IsString()
     public JWT_SECRET!: string;
 
@@ -66,6 +70,7 @@ export class Config implements IRequiredConfigs {
         const configs = this.getParsedConfigs();
 
         this.JWT_SECRET = configs.JWT_SECRET;
+        this.JWT_EXPIRE_IN = configs.JWT_EXPIRE_IN;
         this.PORT = configs.PORT;
         this.POSTGRES_HOST = configs.POSTGRES_HOST;
         this.POSTGRES_PASSWORD = configs.POSTGRES_PASSWORD;

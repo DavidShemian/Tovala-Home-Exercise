@@ -1,5 +1,5 @@
 import { FoodItemEntity } from './../src/models/food-items/entities/food-item.entity';
-import { FoodItemTypeEntity } from 'src/models/food-items/entities/food-item-type.entity';
+import { FoodItemTypeEntity } from './../src/models/food-items/entities/food-item-type.entity';
 import { connection, adminPostRequest } from './setup-e2e';
 
 describe('FoodItem (e2e)', () => {
@@ -38,17 +38,17 @@ describe('FoodItem (e2e)', () => {
                     name: 'Pizza - L',
                     price: 12,
                     foodItemTypeEntity: foodItemTypesFromDB.find(({ type }) => type === 'Entree') as FoodItemTypeEntity,
-                },
+                } as FoodItemEntity,
                 {
                     name: 'Pepperoni',
                     price: 3,
                     foodItemTypeEntity: foodItemTypesFromDB.find(({ type }) => type === 'Pizza Topping') as FoodItemTypeEntity,
-                },
+                } as FoodItemEntity,
                 {
                     name: 'Buffalo Wings',
                     price: 7,
                     foodItemTypeEntity: foodItemTypesFromDB.find(({ type }) => type === 'Appetizer') as FoodItemTypeEntity,
-                },
+                } as FoodItemEntity,
             ],
         };
 
@@ -101,7 +101,7 @@ describe('FoodItem (e2e)', () => {
                     name: 'Pizza - L',
                     price: 12,
                     foodItemTypeEntity: { id: '0' } as FoodItemTypeEntity,
-                },
+                } as FoodItemEntity,
             ],
         };
 
@@ -144,7 +144,7 @@ describe('FoodItem (e2e)', () => {
                     name: 'Pizza - L',
                     price: 12,
                     foodItemTypeEntity: { id: notFoundUUID } as FoodItemTypeEntity,
-                },
+                } as FoodItemEntity,
             ],
         };
 

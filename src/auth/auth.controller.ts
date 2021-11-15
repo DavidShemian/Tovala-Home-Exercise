@@ -12,15 +12,15 @@ export class AuthController extends BaseController {
     }
 
     @Post('login')
-    public async login(@Body() { email, password }: LoginDTO): Promise<ISuccessfulResponse<string>> {
-        const token = await this.authService.login(email, password);
+    public async login(@Body() loginDTO: LoginDTO): Promise<ISuccessfulResponse<string>> {
+        const token = await this.authService.login(loginDTO);
 
         return this.responseSuccess('Successfully login user', token);
     }
 
     @Post('register')
-    public async register(@Body() { email, password }: RegisterDTO): Promise<ISuccessfulResponse<string>> {
-        const token = await this.authService.register(email, password);
+    public async register(@Body() registerDTO: RegisterDTO): Promise<ISuccessfulResponse<string>> {
+        const token = await this.authService.register(registerDTO);
 
         return this.responseSuccess('Successfully registered user', token);
     }

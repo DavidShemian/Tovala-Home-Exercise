@@ -1,3 +1,4 @@
+import { OrderEntity } from './../models/order/order.entity';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { FoodItemEntity } from '../models/food-items/entities/food-item.entity';
@@ -19,7 +20,7 @@ export class DBService {
             password: this.config.POSTGRES_PASSWORD,
             database: this.config.POSTGRES_DB_NAME,
 
-            entities: [UserEntity, FoodItemEntity, FoodItemTypeEntity],
+            entities: [UserEntity, FoodItemEntity, FoodItemTypeEntity, OrderEntity],
             retryAttempts: 0,
             synchronize: true, // In a real production project should use migrations
         };

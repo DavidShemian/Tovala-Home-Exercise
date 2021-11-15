@@ -1,8 +1,10 @@
+import { CustomBadRequestException } from '../../exceptions/bad-request.exception';
 import { BcryptService } from '../../auth/bcrypt/bcrypt.service';
 import { UserDAL } from './user.dal';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { BaseService } from '../../bases/service.base';
 import { UserEntity } from './user.entity';
+import { InternalExceptionCodes } from '../../exceptions/internal-exception-codes.enum';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -10,14 +12,14 @@ export class UserService extends BaseService {
         super();
     }
 
-    public async createUser(email: string, password: string): Promise<UserEntity> {
+    public async createUser(address: string, email: string, password: string): Promise<UserEntity> {
         if (!this.validateEmail(email)) {
-            throw new BadRequestException({ message: 'Invalid email address provided', email });
+            throw new CustomBadRequestException(InternalExceptionCodes.BAD_PARAMS, { message: 'Invalid email address provided', email });
         }
 
         const hashedPassword = await this.bcryptService.getHash(password);
 
-        return this.userDAL.saveUser(new UserEntity(email.toLowerCase(), hashedPassword));
+        return this.userDAL.saveUser(new UserEntity(address, email.toLowerCase(), hashedPassword));
     }
 
     public async getUserByEmail(email: string): Promise<UserEntity | undefined> {

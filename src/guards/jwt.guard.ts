@@ -1,5 +1,5 @@
 import { ITokenPayload } from './../interfaces/token-payload.interface';
-import { IRequestWithOptionalUser } from './../interfaces/request-with-user.interface';
+import { IRequestWithUser } from './../interfaces/request-with-user.interface';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { verify } from 'jsonwebtoken';
@@ -12,7 +12,7 @@ export class JWTGuard implements CanActivate {
     constructor(private readonly config: Config) {}
 
     public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        const request: IRequestWithOptionalUser = context.switchToHttp().getRequest();
+        const request: IRequestWithUser = context.switchToHttp().getRequest();
         const token = this.getTokenFromRequest(request);
 
         try {
@@ -27,7 +27,7 @@ export class JWTGuard implements CanActivate {
         }
     }
 
-    private getTokenFromRequest(request: IRequestWithOptionalUser): string {
+    private getTokenFromRequest(request: IRequestWithUser): string {
         const authorization = request.header('authorization');
 
         if (!authorization) {

@@ -1,30 +1,23 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Fetch Reward Home Challenge implementation by David Shemian. </br>
+This is not production-ready product, but I did try to make it an easy shift to production, if needed.</br>
+I used NestJS, which, in my opinion is a great server-side Node.js Typescript framework, that has some great tools for production usage.</br>
+My project is modeled by the Layer system, i.e. there are controllers to handel the incoming requests, services to handel the business logic, and DAL (Data Access Layer) which handles the DB access.</br>
+For this project, I'm using sqlite3 as a simple-in memory SQL DB. </br>
+In case this project was to go to production, here are some of the things I would think about doing:
+
+-   Use an environment configuration system, instead of hard coding the configurations as it is right now.
+-   Use a production-suited, well indexed DB such as PostgreSQL, MySQL, or MongoDB
+-   Add some more unit tests to the already existing e2e tests
+-   Add some CI/CD tools such as Husky
+-   If needed, add an Auth system
+-   Improve error handling system, including custom made exception classes
+-   Improve the Swagger interface
+
+## Requirement
+
+-   Node.js
 
 ## Installation
 
@@ -34,40 +27,126 @@ $ npm install
 
 ## Running the app
 
+The Server will start automatically on port 3000
+
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm start
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
-
 # e2e tests
 $ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+# Example
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Create user
 
-## Stay in touch
+```bash
+curl -i -X POST http://localhost:8222/auth/register -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# REST API
 
-## License
+## Swagger - API visualization
 
-Nest is [MIT licensed](LICENSE).
+```
+GET /api
+```
+
+```
+curl -i -X GET http://localhost:3000/api
+```
+
+## Create transaction
+
+```
+POST /transactions
+```
+
+```bash
+#Body
+{
+    payer: String,
+    points: Integer,
+    timestamp: ISO8601 Date String
+}
+```
+
+```bash
+#Example
+curl -i -X POST http://localhost:3000/transactions -H 'Content-Type: application/json'  -d '{"payer":"DANNON", "points":1000, "timestamp":"2020-11-02T14:00:00Z"}'
+```
+
+```bash
+#Response
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 49
+ETag: W/"31-ZbI033DSvx1cDteiJeLs9fLZtPI"
+Date: Sat, 06 Nov 2021 15:04:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Successfully added new transactions"}⏎
+```
+
+## Spend points
+
+```
+POST /points/spend
+```
+
+```bash
+#Body
+{
+    points: Positive Integer
+}
+```
+
+```bash
+#Example
+curl -i -X POST http://localhost:3000/points/spend -H 'Content-Type: application/json'  -d '{"points":200}'
+```
+
+```bash
+#Response
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 81
+ETag: W/"51-7Cv2wXSWw/pXI8cgRDVrNr+wZbI"
+Date: Sat, 06 Nov 2021 15:23:29 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Successfully spent points","data":[{"payer":"DANNON","points":-200}]}⏎
+```
+
+## Get Points Balance
+
+```
+GET /points
+```
+
+```bash
+#Example
+curl -i -X GET http://localhost:3000/points
+```
+
+```bash
+#Response
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 74
+ETag: W/"4a-AX/xy3oiNSpIkUz3EfhBUERBA4Y"
+Date: Sat, 06 Nov 2021 15:28:40 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Successfully returned points balance","data":{"DANNON":800}}⏎
+```

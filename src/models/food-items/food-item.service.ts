@@ -19,4 +19,12 @@ export class FoodItemService extends BaseService {
     public async addFoodItemsTypes({ foodItemsTypes }: FoodItemsTypesDTO): Promise<FoodItemTypeEntity[]> {
         return this.foodItemDAL.createFoodItemsTypes(foodItemsTypes);
     }
+
+    public async getAllFoodItems(): Promise<FoodItemEntity[]> {
+        return this.foodItemDAL.getAllFodItems();
+    }
+
+    public async getFoodItemsByIds(foodItemsIds: string[]): Promise<FoodItemEntity[]> {
+        return this.foodItemDAL.getFoodItemsByIds(foodItemsIds);
+    }
 }

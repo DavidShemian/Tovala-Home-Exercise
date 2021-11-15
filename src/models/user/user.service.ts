@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseService } from '../../bases/service.base';
 import { UserEntity } from './user.entity';
 import { InternalExceptionCodes } from '../../exceptions/internal-exception-codes.enum';
+import { UserRules } from './user-rules.enum';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -12,14 +13,14 @@ export class UserService extends BaseService {
         super();
     }
 
-    public async createUser(address: string, email: string, password: string): Promise<UserEntity> {
+    public async createUser(address: string, email: string, password: string, rule: UserRules): Promise<UserEntity> {
         if (!this.validateEmail(email)) {
             throw new CustomBadRequestException(InternalExceptionCodes.BAD_PARAMS, { message: 'Invalid email address provided', email });
         }
 
         const hashedPassword = await this.bcryptService.getHash(password);
 
-        return this.userDAL.saveUser(new UserEntity(address, email.toLowerCase(), hashedPassword));
+        return this.userDAL.saveUser(new UserEntity(address, email.toLowerCase(), hashedPassword, rule));
     }
 
     public async getUserByEmail(email: string): Promise<UserEntity | undefined> {

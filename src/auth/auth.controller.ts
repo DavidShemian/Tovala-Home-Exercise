@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { UserRules } from 'src/models/user/user-rules.enum';
 import { BaseController } from '../bases/controller.base';
 import { ISuccessfulResponse } from '../interfaces/successful-response.interface';
 import { AuthService } from './auth.service';
@@ -20,7 +21,14 @@ export class AuthController extends BaseController {
 
     @Post('register')
     public async register(@Body() registerDTO: RegisterDTO): Promise<ISuccessfulResponse<string>> {
-        const token = await this.authService.register(registerDTO);
+        const token = await this.authService.register(registerDTO, UserRules.CUSTOMER);
+
+        return this.responseSuccess('Successfully registered user', token);
+    }
+
+    @Post('register/admin')
+    public async registerAdmin(@Body() registerDTO: RegisterDTO): Promise<ISuccessfulResponse<string>> {
+        const token = await this.authService.register(registerDTO, UserRules.ADMIN);
 
         return this.responseSuccess('Successfully registered user', token);
     }

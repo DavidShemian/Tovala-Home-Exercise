@@ -9,6 +9,7 @@ import { Config } from '../config/config';
 import { BcryptService } from './bcrypt/bcrypt.service';
 import { ITokenPayload } from '../interfaces/token-payload.interface';
 import { RegisterDTO } from './DTO/register.dto';
+import { UserRules } from 'src/models/user/user-rules.enum';
 
 @Injectable()
 export class AuthService extends BaseService {
@@ -39,7 +40,7 @@ export class AuthService extends BaseService {
         return this.signToken({ id: existingUser.id, rule: existingUser.rule });
     }
 
-    public async register({ address, email, password }: RegisterDTO): Promise<string> {
+    public async register({ address, email, password }: RegisterDTO, userRule: UserRules): Promise<string> {
         const existingUser = await this.userService.getUserByEmail(email);
 
         if (existingUser) {
@@ -49,7 +50,7 @@ export class AuthService extends BaseService {
             });
         }
 
-        const { id, rule } = await this.userService.createUser(address, email, password);
+        const { id, rule } = await this.userService.createUser(address, email, password, userRule);
 
         return this.signToken({ id, rule });
     }

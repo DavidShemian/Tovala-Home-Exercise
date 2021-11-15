@@ -20,11 +20,12 @@ export class UserEntity extends BaseEntity {
     @Column({ type: 'enum', enum: UserRules, unique: false, nullable: false, default: UserRules.CUSTOMER })
     public rule!: UserRules;
 
-    constructor(address: string, email: string, password: string) {
+    constructor(address: string, email: string, password: string, rule: UserRules) {
         super();
 
         this.address = address;
         this.email = email;
         this.password = password;
+        this.rule = rule;
     }
 }

@@ -2,9 +2,9 @@
 
 Tovala Home Task implementation by David Shemian. </br>
 I decided to create a food ordering service instead of only pizza ordering. </br>
-The system provided the ability for an admin (a user with admin privileges) to create food types (Entree, Appetizer, Pizza toping, etc) </br>
+The system provided the ability for an admin (a user with admin privileges) to create food types (Entree, Appetizer, Pizza toping, etc)
 and food items based on those food types (Pizza, Wings, Salad, etc). </br>
-A client (user with client privileges) can view available food items and their price, </br>
+A client (user with client privileges) can view available food items and their prices, </br>
 create an order based on those food items, and check his order status. </br>
 An admin can also change the order status. </br>
 I created this service with the mindset that a Front End application will use it. </br>
@@ -27,7 +27,7 @@ Some of of the features this service includes are: </br>
 -   Swagger for api visualization
 
 This is not production-ready product, but I did try to make it an easy shift to production, if needed.</br>
-In case this project was to go to production, here are some of the things I would consider doing are:
+In case this project was to go to production, here are some of the things I would consider adding are:
 
 -   Add some more unit tests to the already existing e2e tests
 -   Add some CI/CD tools
@@ -37,6 +37,7 @@ In case this project was to go to production, here are some of the things I woul
 -   Add email validation and password matching pattern mechanism
 -   Add forgot my password option
 -   Add filter options to routes, such as only getting a specific type of food items
+-   Add security packages such as helmet
 
 ## Requirement
 
@@ -47,7 +48,7 @@ In order to run the service locally, the requirements are:
 -   Node.js
 -   Postgresql
 
-</br> To allow fot getting started quickly, please add provided .env file (sent over by email), that has all required configuration, to the root of project
+</br> To allow for running the project quickly, please add provided .env file (sent over by email), that has all required configuration, to the root of project
 </br> The env file has the credentials for the Postgres DB that is hosted on AWS.
 </br> All required env configs can be found in the config.ts file
 </br> The application will not start without all required configs provided.

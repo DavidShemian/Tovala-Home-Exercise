@@ -42,10 +42,42 @@ $ npm run test:e2e
 
 # Example
 
-## Create user
+## Create admin user
 
 ```bash
-curl -i -X POST http://localhost:8222/auth/register -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
+#CURL
+curl -i -X POST http://54.234.81.207:8222/auth/register/admin -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
+
+#Response
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 259
+ETag: W/"103-bycqRDxD8rb6y2/aCoypPt/tiC8"
+Date: Mon, 15 Nov 2021 23:52:07 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2ZDRjYzUyLTJhMDUtNGI3Zi04YTlmLWFhZjUxODQ3ZjI3NyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyMDMyNywiZXhwIjoxNjM3MDU2MzI3fQ.qNohHKaQN8sdCtV0d9l_hrrwV7ZUM7bT6jkCWdb5sfU"}⏎
+```
+
+## Use admin token to add food items
+
+```bash
+#CURL
+curl -i -X POST http://54.234.81.207:8222/auth/register/admin -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
+
+#Response
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 259
+ETag: W/"103-bycqRDxD8rb6y2/aCoypPt/tiC8"
+Date: Mon, 15 Nov 2021 23:52:07 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2ZDRjYzUyLTJhMDUtNGI3Zi04YTlmLWFhZjUxODQ3ZjI3NyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyMDMyNywiZXhwIjoxNjM3MDU2MzI3fQ.qNohHKaQN8sdCtV0d9l_hrrwV7ZUM7bT6jkCWdb5sfU"}⏎
 ```
 
 # REST API

@@ -57,11 +57,10 @@ describe('Order (e2e)', () => {
 
         const updateStatusBody = {
             status: OrderStatus.SHIPPED,
-            id: orderFromDb[0].id,
         };
 
         // Update order status
-        const updateStatusResult = await adminPutRequest(`${TEST_ROUTE}/status`, updateStatusBody);
+        const updateStatusResult = await adminPutRequest(`${TEST_ROUTE}/status/${orderFromDb[0].id}`, updateStatusBody);
         expect(updateStatusResult.status).toBe(200);
 
         // Get order status
@@ -111,12 +110,9 @@ describe('Order (e2e)', () => {
     it('Should fail updating order status when no order with given id', async () => {
         const badUUID = '123e4567-e89b-12d3-a456-426614174000';
 
-        const badUpdateStatusBody = {
-            status: OrderStatus.SHIPPED,
-            id: badUUID,
-        };
+        const badUpdateStatusBody = { status: OrderStatus.SHIPPED };
 
-        const updateStatusResult = await adminPutRequest(`${TEST_ROUTE}/status`, badUpdateStatusBody);
+        const updateStatusResult = await adminPutRequest(`${TEST_ROUTE}/status/${badUUID}`, badUpdateStatusBody);
         expect(updateStatusResult.status).toBe(400);
         expect(updateStatusResult.body).toMatchObject({ internalCode: InternalExceptionCodes.NOT_NULL_VIOLATION, message: 'Not null violation' });
     });

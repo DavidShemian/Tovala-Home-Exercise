@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserRules } from 'src/models/user/user-rules.enum';
+import { UserRules } from '../models/user/user-rules.enum';
 import { BaseController } from '../bases/controller.base';
 import { ISuccessfulResponse } from '../interfaces/successful-response.interface';
 import { AuthService } from './auth.service';

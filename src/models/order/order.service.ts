@@ -39,8 +39,8 @@ export class OrderService extends BaseService {
         return order;
     }
 
-    public async updateOrder({ id, status }: UpdateOrderStatusDTO): Promise<UpdateOrderStatusDTO> {
-        return this.orderDAL.updateStatus(id, status);
+    public async updateOrder(orderId: string, { status }: UpdateOrderStatusDTO): Promise<UpdateOrderStatusDTO> {
+        return this.orderDAL.updateStatus(orderId, status);
     }
 
     private async getOrderFoodItems(foodItemsIds: string[]): Promise<FoodItemEntity[]> {

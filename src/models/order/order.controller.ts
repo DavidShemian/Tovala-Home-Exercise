@@ -30,10 +30,13 @@ export class OrderController extends BaseController {
         return this.responseSuccess('Successfully got order status', { status: orderStatus.status });
     }
 
-    @Put('status')
+    @Put('status/:id')
     @UseGuards(AdminGuard)
-    public async updateOrderStatus(@Body() updateOrderStatusDTO: UpdateOrderStatusDTO): Promise<ISuccessfulResponse<UpdateOrderStatusDTO>> {
-        const updatedOrder = await this.orderService.updateOrder(updateOrderStatusDTO);
+    public async updateOrderStatus(
+        @Param() { id }: { id: string },
+        @Body() updateOrderStatusDTO: UpdateOrderStatusDTO
+    ): Promise<ISuccessfulResponse<UpdateOrderStatusDTO>> {
+        const updatedOrder = await this.orderService.updateOrder(id, updateOrderStatusDTO);
 
         return this.responseSuccess('Successfully update order status', updatedOrder);
     }

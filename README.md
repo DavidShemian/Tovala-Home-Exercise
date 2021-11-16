@@ -48,9 +48,9 @@ In order to run the service locally, the requirements are:
 -   Node.js
 -   Postgresql
 
-</br> To allow for running the project quickly, please add provided .env file (sent over by email), that has all required configuration, to the root of project
+</br> To allow for running the project quickly, please add provided .env file (sent over by email), that has all required configuration, to the root of project.
 </br> The env file has the credentials for the Postgres DB that is hosted on AWS.
-</br> All required env configs can be found in the config.ts file
+</br> All required env configs can be found in the config.ts file.
 </br> The application will not start without all required configs provided.
 
 ## Installation

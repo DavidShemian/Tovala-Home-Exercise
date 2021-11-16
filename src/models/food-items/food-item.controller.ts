@@ -33,6 +33,7 @@ export class FoodItemController extends BaseController {
     }
 
     @Get('/type')
+    @UseGuards(AdminGuard)
     public async getAllFoodItemTypes(): Promise<ISuccessfulResponse<FoodItemTypeEntity[]>> {
         const result = await this.foodItemService.getAllFoodItemTypes();
 

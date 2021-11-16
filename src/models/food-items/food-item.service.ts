@@ -20,6 +20,10 @@ export class FoodItemService extends BaseService {
         return this.foodItemDAL.createFoodItemsTypes(foodItemsTypes);
     }
 
+    public async getAllFoodItemTypes(): Promise<FoodItemTypeEntity[]> {
+        return this.foodItemDAL.getAllFodItemTypes();
+    }
+
     public async getAllFoodItems(): Promise<FoodItemEntity[]> {
         return this.foodItemDAL.getAllFodItems();
     }

@@ -42,47 +42,9 @@ $ npm run test:e2e
 
 # Example
 
-## Create admin user
-
-```bash
-#CURL
-curl -i -X POST http://54.234.81.207:8222/auth/register/admin -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
-
-#Response
-HTTP/1.1 201 Created
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-Content-Length: 259
-ETag: W/"103-bycqRDxD8rb6y2/aCoypPt/tiC8"
-Date: Mon, 15 Nov 2021 23:52:07 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2ZDRjYzUyLTJhMDUtNGI3Zi04YTlmLWFhZjUxODQ3ZjI3NyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyMDMyNywiZXhwIjoxNjM3MDU2MzI3fQ.qNohHKaQN8sdCtV0d9l_hrrwV7ZUM7bT6jkCWdb5sfU"}⏎
-```
-
----
-
-## Use admin token to add food items
-
-```bash
-#CURL
-curl -i -X POST http://54.234.81.207:8222/auth/register/admin -H 'Content-Type: application/json'  -d '{"email": "david@gmail.com", "password": "password", "address": "address"}'
-
-#Response
-HTTP/1.1 201 Created
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-Content-Length: 259
-ETag: W/"103-bycqRDxD8rb6y2/aCoypPt/tiC8"
-Date: Mon, 15 Nov 2021 23:52:07 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2ZDRjYzUyLTJhMDUtNGI3Zi04YTlmLWFhZjUxODQ3ZjI3NyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyMDMyNywiZXhwIjoxNjM3MDU2MzI3fQ.qNohHKaQN8sdCtV0d9l_hrrwV7ZUM7bT6jkCWdb5sfU"}⏎
-```
-
 # REST API
+
+**The server public URL is 54.234.81.207:8222**
 
 ## Swagger - API visualization
 
@@ -91,79 +53,87 @@ GET /api
 ```
 
 ```
-curl -i -X GET http://localhost:3000/api
+curl -i -X GET http://54.234.81.207:8222/api
 ```
 
-## Create transaction
+## Register customer
 
 ```
-POST /transactions
-```
-
-```bash
-#Body
-{
-    payer: String,
-    points: Integer,
-    timestamp: ISO8601 Date String
-}
-```
-
-```bash
-#Example
-curl -i -X POST http://localhost:3000/transactions -H 'Content-Type: application/json'  -d '{"payer":"DANNON", "points":1000, "timestamp":"2020-11-02T14:00:00Z"}'
-```
-
-```bash
-#Response
-HTTP/1.1 201 Created
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-Content-Length: 49
-ETag: W/"31-ZbI033DSvx1cDteiJeLs9fLZtPI"
-Date: Sat, 06 Nov 2021 15:04:28 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-{"message":"Successfully added new transactions"}⏎
-```
-
-## Spend points
-
-```
-POST /points/spend
+POST /auth/register
 ```
 
 ```bash
 #Body
 {
-    points: Positive Integer
+    email: String,
+    password: String,
+    address: String
 }
 ```
 
 ```bash
 #Example
-curl -i -X POST http://localhost:3000/points/spend -H 'Content-Type: application/json'  -d '{"points":200}'
+curl -s -X POST http://54.234.81.207:8222/auth/register -H 'Content-Type: application/json'  -d '{"email": "newuser@gmail.com", "password": "password", "address": "1021 W Adams St #100, Chicago, IL 60607"}'
 ```
 
 ```bash
 #Response
-HTTP/1.1 201 Created
-X-Powered-By: Express
-Content-Type: application/json; charset=utf-8
-Content-Length: 81
-ETag: W/"51-7Cv2wXSWw/pXI8cgRDVrNr+wZbI"
-Date: Sat, 06 Nov 2021 15:23:29 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-{"message":"Successfully spent points","data":[{"payer":"DANNON","points":-200}]}⏎
+{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhNzM2OTRjLTM4MTAtNDI4Zi05YjIwLTNhYTNhMWZhNWY5MyIsInJ1bGUiOiJjdXN0b21lciIsImlhdCI6MTYzNzAyNTUwMCwiZXhwIjoxNjM3MDYxNTAwfQ.PelqnnBQBSiePwSUFvlcnMh-Gs6IsmmkdQPohNJ-WXk"}⏎
 ```
 
-## Get Points Balance
+## Login user
 
 ```
-GET /points
+POST /auth/login
+```
+
+```bash
+#Body
+{
+    email: String,
+    password: String
+}
+```
+
+```bash
+#Example
+curl -s -X POST http://54.234.81.207:8222/auth/login -H 'Content-Type: application/json'  -d '{"email": "newuser@gmail.com", "password": "password"}'
+```
+
+```bash
+#Response
+{"message":"Successfully login user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhNzM2OTRjLTM4MTAtNDI4Zi05YjIwLTNhYTNhMWZhNWY5MyIsInJ1bGUiOiJjdXN0b21lciIsImlhdCI6MTYzNzAyNjI1MiwiZXhwIjoxNjM3MDYyMjUyfQ.TJu0FWHSpgIdCC67QK41hL4Ng8A3OC4nlT-ywBHd10s"}⏎
+```
+
+## Register admin
+
+```
+POST /auth/admin
+```
+
+```bash
+#Body
+{
+    email: String,
+    password: String,
+    address: String
+}
+```
+
+```bash
+#Example
+curl -s -X POST http://54.234.81.207:8222/auth/register/admin -H 'Content-Type: application/json'  -d '{"email": "newadmin@gmail.com", "password": "password", "address": "1021 W Adams St #100, Chicago, IL 60607"}'
+```
+
+```bash
+#Response
+{"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjU0M2E5LWJhZDMtNDQ3Ny1iOTM3LWFhNWM2ZTdiODVjYyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyNjM4MiwiZXhwIjoxNjM3MDYyMzgyfQ.qVD4vomWVJ2VbMs7o8L7uC5NgsrTB0RAX3cu9PfGPfE"}
+```
+
+## Create food items (admin route)
+
+```
+POST /food-item/type
 ```
 
 ```bash

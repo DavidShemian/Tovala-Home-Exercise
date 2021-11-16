@@ -27,8 +27,15 @@ export class FoodItemDAL extends BaseDAL {
 
     public async createFoodItemsTypes(foodItemsTypes: FoodItemTypeEntity[]): Promise<FoodItemTypeEntity[]> {
         try {
-            // await only for try and catch
             return await this.foodItemTypeRepository.save(foodItemsTypes);
+        } catch (e) {
+            throw throwInternalDBException(e as INativeDBException);
+        }
+    }
+
+    public async getAllFodItemTypes(): Promise<FoodItemTypeEntity[]> {
+        try {
+            return await this.foodItemTypeRepository.find();
         } catch (e) {
             throw throwInternalDBException(e as INativeDBException);
         }
@@ -36,7 +43,6 @@ export class FoodItemDAL extends BaseDAL {
 
     public async getAllFodItems(): Promise<FoodItemEntity[]> {
         try {
-            // await only for try and catch
             return await this.foodItemRepository.find({ where: { inStock: true }, relations: ['foodItemTypeEntity'] });
         } catch (e) {
             throw throwInternalDBException(e as INativeDBException);
@@ -45,7 +51,6 @@ export class FoodItemDAL extends BaseDAL {
 
     public async getFoodItemsByIds(ids: string[]): Promise<FoodItemEntity[]> {
         try {
-            // await only for try and catch
             return await this.foodItemRepository.find({
                 where: { id: In(ids), inStock: true },
             });

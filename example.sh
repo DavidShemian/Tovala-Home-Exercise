@@ -22,11 +22,13 @@ ORDER_ID=$(echo $ORDER_RESPONSE | jq -r '.data.id')
 
 # Check order status
 ORDER_STATUS=$(curl -s -X GET http://54.234.81.207:8222/order/status/${ORDER_ID} -H 'Content-Type: application/json'  -H "Authorization: Bearer ${CUSTOMER_TOKEN}" | jq -r '.data.status')
+echo "Order status:"
 echo $ORDER_STATUS
 
 # Update order status by admin
-curl -s -X PUT http://54.234.81.207:8222/order/status -H 'Content-Type: application/json'  -H "Authorization: Bearer ${ADMIN_TOKEN}" -d '{"id": "'${ORDER_ID}}'", "status": "shipped"}'
+UPDATE_STATUS_RESULT=$(curl -s -X PUT http://54.234.81.207:8222/order/status/${ORDER_ID} -H 'Content-Type: application/json'  -H "Authorization: Bearer ${ADMIN_TOKEN}" -d '{"status": "shipped"}')
 
 # Check order status
 UPDATED_ORDER_STATUS=$(curl -s -X GET http://54.234.81.207:8222/order/status/${ORDER_ID} -H 'Content-Type: application/json'  -H "Authorization: Bearer ${CUSTOMER_TOKEN}" | jq -r '.data.status')
+echo "Updated order status:"
 echo $UPDATED_ORDER_STATUS

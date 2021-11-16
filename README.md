@@ -61,6 +61,8 @@ Keep-Alive: timeout=5
 {"message":"Successfully registered user","data":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc2ZDRjYzUyLTJhMDUtNGI3Zi04YTlmLWFhZjUxODQ3ZjI3NyIsInJ1bGUiOiJhZG1pbiIsImlhdCI6MTYzNzAyMDMyNywiZXhwIjoxNjM3MDU2MzI3fQ.qNohHKaQN8sdCtV0d9l_hrrwV7ZUM7bT6jkCWdb5sfU"}⏎
 ```
 
+---
+
 ## Use admin token to add food items
 
 ```bash

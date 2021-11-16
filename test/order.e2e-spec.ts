@@ -1,7 +1,7 @@
 import { InternalExceptionCodes } from './../src/exceptions/internal-exception-codes.enum';
 import { OrderEntity } from './../src/models/order/order.entity';
 import { FoodItemEntity } from './../src/models/food-items/entities/food-item.entity';
-import { adminPutRequest, connection, customerGetRequest, customerPostRequest } from './setup-e2e';
+import { adminPutRequest, connection, customerGetRequest, customerPostRequest } from './configs/setup-e2e';
 import { OrderStatus } from './../src/models/order/order-status.enum';
 
 describe('Order (e2e)', () => {

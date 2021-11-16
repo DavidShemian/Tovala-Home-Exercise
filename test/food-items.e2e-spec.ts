@@ -1,6 +1,6 @@
 import { FoodItemEntity } from './../src/models/food-items/entities/food-item.entity';
 import { FoodItemTypeEntity } from './../src/models/food-items/entities/food-item-type.entity';
-import { connection, adminPostRequest } from './setup-e2e';
+import { connection, adminPostRequest } from './configs/setup-e2e';
 
 describe('FoodItem (e2e)', () => {
     const TEST_ROUTE = '/food-item';

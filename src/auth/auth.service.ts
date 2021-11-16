@@ -5,16 +5,14 @@ import { TokenService } from './token/token.service';
 import { UserService } from '../models/user/user.service';
 import { Injectable } from '@nestjs/common';
 import { BaseService } from '../bases/service.base';
-import { Config } from '../config/config';
 import { BcryptService } from './bcrypt/bcrypt.service';
 import { ITokenPayload } from '../interfaces/token-payload.interface';
 import { RegisterDTO } from './DTO/register.dto';
-import { UserRules } from 'src/models/user/user-rules.enum';
+import { UserRules } from '../models/user/user-rules.enum';
 
 @Injectable()
 export class AuthService extends BaseService {
     constructor(
-        private readonly config: Config,
         private readonly userService: UserService,
         private readonly bcryptService: BcryptService,
         private readonly tokenService: TokenService

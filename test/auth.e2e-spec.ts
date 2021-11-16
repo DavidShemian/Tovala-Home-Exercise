@@ -1,5 +1,5 @@
 import { TokenService } from '../src/auth/token/token.service';
-import { moduleFixture, connection, postRequestWithoutToken } from './setup-e2e';
+import { moduleFixture, connection, postRequestWithoutToken } from './configs/setup-e2e';
 import { UserEntity } from '../src/models/user/user.entity';
 import { InternalExceptionCodes } from '../src/exceptions/internal-exception-codes.enum';
 

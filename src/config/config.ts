@@ -100,7 +100,7 @@ export class Config implements IRequiredConfigs {
 
         // Override configs with test configs if running in test environment
         if (this.NODE_ENV === Environment.test) {
-            return { ...parsedConfigs, ...require('../../test/test.config.json') };
+            return { ...parsedConfigs, ...require('../../test/configs/test.config.json') };
         }
 
         return parsedConfigs;
